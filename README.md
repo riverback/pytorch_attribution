@@ -1,4 +1,4 @@
-# Attribution Methods for Timm (PyTorch Image Models)
+# Explainability Methods for PyTorch Image Models (timm)
 This is an ongoing work to implement various attribution methods for image classification models from [timm](https://github.com/huggingface/pytorch-image-models).
 
 ## Gradients Visualization
