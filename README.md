@@ -1,5 +1,5 @@
 # Attribution Methods for Timm (PyTorch Image Models)
-This is an ongoing work to implement various attribution methods for image classification models using [timm](https://github.com/huggingface/pytorch-image-models).
+This is an ongoing work to implement various attribution methods for image classification models from [timm](https://github.com/huggingface/pytorch-image-models).
 
 ## Gradients Visualization
 model: 'convnext_base.fb_in1k'
