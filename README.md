@@ -2,13 +2,17 @@
 This is an ongoing work to implement various attribution methods for image classification models from [timm](https://github.com/huggingface/pytorch-image-models).
 
 ## Gradients Visualization
-model: 'convnext_base.fb_in1k'
+model: 'resnet18'
 <img src="./examples/gradients_visualization.png">
 
+
 ## TODO:
-- [ ] Unify gradient visualization API
+- [x] Unify gradient visualization API
+- [ ] Documentation for gradient visualization
 - [ ] Implement CAM visualization for CNN models based on known target_layer names
 - [ ] Implement CAM for ViT ,Swin Transformer and etc.
+- [ ] Documentation for CAM visualization
+- [ ] Unify all APIs
 - [ ] Implement CAM visualization for adaptive model architectures (TBD).
 
 ## Acknowledgements
