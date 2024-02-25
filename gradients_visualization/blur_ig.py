@@ -1,0 +1,52 @@
+from .base import VanillaGradient
+
+import math
+import torch
+from torchvision.transforms import GaussianBlur
+
+def gaussian_blur(img: torch.Tensor, sigma: int):
+    if sigma == 0:
+        return img
+    kernel_size = int(4 * sigma + 0.5) + 1
+    return GaussianBlur(kernel_size=kernel_size, sigma=sigma)(img)
+
+
+class BlurIG(VanillaGradient):
+    def get_mask(self, img: torch.Tensor, 
+                 target_class: torch.Tensor,
+                 max_sigma: int = 50,
+                 steps: int = 100,
+                 grad_step: float = 0.01,
+                 sqrt: bool = False,
+                 batch_size: int = 4):
+        
+        if sqrt:
+            sigmas = [math.sqrt(float(i) * max_sigma / float(steps)) for i in range(0, steps+1)]
+        else:
+            sigmas = [float(i) * max_sigma / float(steps) for i in range(0, steps+1)]
+        
+        step_vector_diff = [sigmas[i+1] - sigmas[i] for i in range(0, steps)]
+        total_gradients = torch.zeros_like(img)
+        x_step_batched = []
+        gaussian_gradient_batched = []
+
+        for i in range(steps):
+            with torch.no_grad():
+                x_step = gaussian_blur(img, sigmas[i])
+                gaussian_gradients = (gaussian_blur(img, sigmas[i] + grad_step) - x_step) / grad_step
+            x_step_batched.append(x_step)
+            gaussian_gradient_batched.append(gaussian_gradients)
+            if len(x_step_batched) == batch_size or i == steps - 1:
+                x_step_batched = torch.cat(x_step_batched, dim=0)
+                gradients = super(BlurIG, self).get_mask(x_step_batched, torch.stack([target_class] * x_step_batched.size(0), dim=0))
+
+                with torch.no_grad():
+                    total_gradients += (step_vector_diff[i] * 
+                                        torch.mul(torch.cat(gaussian_gradient_batched, dim=0), gradients.clone())).sum(dim=0)
+                x_step_batched = []
+                gaussian_gradient_batched = []
+        
+        with torch.no_grad():
+            blur_ig = total_gradients * -1.0
+
+        return blur_ig
