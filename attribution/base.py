@@ -64,5 +64,36 @@ class CAMWrapper(Core):
     def __init__(self, model: torch.nn.Module):
         super(CAMWrapper, self).__init__(model)
     
-    
+        self.feature_maps = dict()
+        self.gradients = dict()
         
+        def save_feature_maps(name):
+            def forward_hook(module, input, output):
+                self.feature_maps[name] = output.detach()
+
+            return forward_hook
+        
+        def save_gradients(name):
+            def _store_grad(grad):
+                self.gradients[name] = grad.detach()
+            def forward_hook(module, input, output):
+                output.register_hook(_store_grad)
+                
+            return forward_hook
+                
+        for name, module in self.model.named_modules():
+            self.hooks.append(module.register_forward_hook(save_feature_maps(name)))
+            self.hooks.append(module.register_forward_hook(save_gradients(name)))
+                
+    def _find(self, saved_dict, name: str):
+        if name in saved_dict.keys():
+            return saved_dict[name]
+        
+        raise ValueError('Invalid layer name')
+    
+    def normalize_cam(self, cam: torch.Tensor):
+        B, C, H, W = cam.size()
+        cam = cam.view(cam.size(0), -1)
+        cam -= cam.min(dim=1, keepdim=True)[0]
+        cam /= cam.max(dim=1, keepdim=True)[0]
+        return cam.view(B, C, H, W)
