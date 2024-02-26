@@ -19,6 +19,8 @@ class BlurIG(VanillaGradient):
                  grad_step: float = 0.01,
                  sqrt: bool = False,
                  batch_size: int = 4):
+        self.model.eval()
+        self.model.zero_grad()
         
         if sqrt:
             sigmas = [math.sqrt(float(i) * max_sigma / float(steps)) for i in range(0, steps+1)]
@@ -50,3 +52,23 @@ class BlurIG(VanillaGradient):
             blur_ig = total_gradients * -1.0
 
         return blur_ig
+    
+    def get_smoothed_mask(self, img: torch.Tensor, 
+                          target_class: torch.Tensor, 
+                          max_sigma: int = 50,
+                          steps: int = 100,
+                          grad_step: float = 0.01,
+                          sqrt: bool = False,
+                          batch_size: int = 4,
+                          samples: int = 25,
+                          std: float = 0.15,
+                          process=lambda x: x**2):
+        std = std * (torch.max(img) - torch.min(img)).detach().cpu().numpy()
+        
+        B, C, H, W = img.size()
+        grad_sum = torch.zeros((B, C, H, W), device=self.device)
+        for sample in range(samples):
+            noise = torch.empty(img.size()).normal_(0, std).to(self.device)
+            noise_image = img + noise
+            grad_sum += process(self.get_mask(noise_image, target_class, max_sigma, steps, grad_step, sqrt, batch_size))
+        return grad_sum / samples

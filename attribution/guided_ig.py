@@ -32,6 +32,9 @@ class GuidedIG(VanillaGradient):
                  fraction=0.25,
                  max_dist=0.02):
         
+        self.model.eval()
+        self.model.zero_grad()
+        
         if baseline is None or baseline == 'None':
             baseline = torch.zeros_like(img, device=self.device)
         elif baseline == 'black':
@@ -42,6 +45,25 @@ class GuidedIG(VanillaGradient):
             raise ValueError(f'Baseline {baseline} is not supported, use "black", "white" or None')
         
         return self.guided_ig_impl(img, target_class, baseline, steps, fraction, max_dist)
+    
+    def get_smoothed_mask(self, img: torch.Tensor,
+                          target_class: torch.Tensor,
+                          baseline = 'None',
+                          steps: int = 128,
+                          fraction: float = 0.25,
+                          max_dist: float = 0.02,
+                          samples: int = 25,
+                          std: float = 0.15,
+                          process=lambda x: x**2):
+        std = std * (torch.max(img) - torch.min(img)).detach().cpu().numpy()
+        
+        B, C, H, W = img.size()
+        grad_sum = torch.zeros((B, C, H, W), device=self.device)
+        for sample in range(samples):
+            noise = torch.empty(img.size()).normal_(0, std).to(self.device)
+            noise_image = img + noise
+            grad_sum += process(self.get_mask(noise_image, target_class, baseline, steps, fraction, max_dist))
+        return grad_sum / samples
     
     def guided_ig_impl(self, img: torch.Tensor,
                        target_class: torch.Tensor,

@@ -1,10 +1,10 @@
 import torch
 import numpy as np
 
-class Core(object):
-    def __init__(self, model):
+class GradientsCore(torch.nn.Module):
+    def __init__(self, model: torch.nn.Module):
+        super(GradientsCore, self).__init__()
         self.model = model
-        self.model.eval()
         self.gradient = None
         self.hooks = list()
         self.device = next(model.parameters()).device
@@ -17,20 +17,28 @@ class Core(object):
         for hook in self.hooks:
             hook.remove()
             
-class VanillaGradient(Core):
+    def forward(self, img):
+        logits = self.model(img)
+        return logits
+
+class VanillaGradient(GradientsCore):
     def __init__(self, model):
         super(VanillaGradient, self).__init__(model)
 
-    def _encode_one_hot(self, targets, logits):
-
+    def _encode_one_hot(self, targets: torch.Tensor, logits: torch.Tensor):
+        if not isinstance(targets, torch.Tensor):
+            targets = torch.tensor([targets], device=self.device)
+        targets = targets.view(logits.size(0))
         one_hot = torch.zeros_like(logits)
         for i in range(0, one_hot.shape[0]):
             one_hot[i, targets[i]] = 1.0
         return one_hot
-    
+
     # return gradients
     def get_mask(self, img: torch.Tensor, target_class: torch.Tensor):
+        self.model.eval()
         self.model.zero_grad()
+        
         img = img.clone()
         img.requires_grad = True
         img.retain_grad()
@@ -52,11 +60,3 @@ class VanillaGradient(Core):
             noise_image = img + noise
             grad_sum += process(self.get_mask(noise_image, target_class))
         return grad_sum / samples
-    
-    
-
-    
-
-class BlurIntegratedGradients(VanillaGradient):
-    def get_mask(self, img: torch.Tensor, target_class: torch.Tensor, steps=100, max_sigma=50, grad_step=0.01, sqrt=False, batch_size=4):
-        ...

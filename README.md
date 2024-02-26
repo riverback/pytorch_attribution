@@ -2,7 +2,8 @@
 This is an ongoing work to implement various attribution methods for image classification models from [timm](https://github.com/huggingface/pytorch-image-models).
 
 ## Gradients Visualization
-model: 'resnet18'
+results of resnet50 from timm, example code at [./gradientss_visualization_examples.py](./gradients_visualization_examples.py)
+
 <img src="./examples/gradients_visualization.png">
 
 
