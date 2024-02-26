@@ -23,8 +23,8 @@ class GradCAM(CAMWrapper):
         gradients = self._find(self.gradients, target_layer)
         
         # generate CAM
-        weights = F.adaptive_avg_pool2d(gradients, 1)
         with torch.no_grad():
+            weights = F.adaptive_avg_pool2d(gradients, 1)
             cam = torch.mul(feature_maps, weights).sum(dim=1, keepdim=True)
             cam = F.relu(cam)
             cam = F.interpolate(cam, (H, W), mode='bilinear', align_corners=False)

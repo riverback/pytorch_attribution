@@ -91,6 +91,7 @@ class CAMWrapper(Core):
         
         raise ValueError('Invalid layer name')
     
+    @torch.no_grad()
     def normalize_cam(self, cam: torch.Tensor):
         B, C, H, W = cam.size()
         cam = cam.view(cam.size(0), -1)
