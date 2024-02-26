@@ -1,13 +1,20 @@
 import torch
-import numpy as np
 
-class GradientsCore(torch.nn.Module):
+class Core(torch.nn.Module):
     def __init__(self, model: torch.nn.Module):
-        super(GradientsCore, self).__init__()
+        super(Core, self).__init__()
         self.model = model
-        self.gradient = None
-        self.hooks = list()
+        self.hooks = list() # list of hooks
         self.device = next(model.parameters()).device
+        
+    def _encode_one_hot(self, targets: torch.Tensor, logits: torch.Tensor):
+        if not isinstance(targets, torch.Tensor):
+            targets = torch.tensor([targets], device=self.device)
+        targets = targets.view(logits.size(0))
+        one_hot = torch.zeros_like(logits)
+        for i in range(0, one_hot.shape[0]):
+            one_hot[i, targets[i]] = 1.0
+        return one_hot
 
     def get_mask(self, img, target_class=None):
         raise NotImplementedError(
@@ -21,18 +28,9 @@ class GradientsCore(torch.nn.Module):
         logits = self.model(img)
         return logits
 
-class VanillaGradient(GradientsCore):
+class VanillaGradient(Core):
     def __init__(self, model):
         super(VanillaGradient, self).__init__(model)
-
-    def _encode_one_hot(self, targets: torch.Tensor, logits: torch.Tensor):
-        if not isinstance(targets, torch.Tensor):
-            targets = torch.tensor([targets], device=self.device)
-        targets = targets.view(logits.size(0))
-        one_hot = torch.zeros_like(logits)
-        for i in range(0, one_hot.shape[0]):
-            one_hot[i, targets[i]] = 1.0
-        return one_hot
 
     # return gradients
     def get_mask(self, img: torch.Tensor, target_class: torch.Tensor):
@@ -60,3 +58,11 @@ class VanillaGradient(GradientsCore):
             noise_image = img + noise
             grad_sum += process(self.get_mask(noise_image, target_class))
         return grad_sum / samples
+
+
+class CAMWrapper(Core):
+    def __init__(self, model: torch.nn.Module):
+        super(CAMWrapper, self).__init__(model)
+    
+    
+        
