@@ -1,7 +1,7 @@
 import torch
 import numpy as np
 
-class SaliencyMask(object):
+class Core(object):
     def __init__(self, model):
         self.model = model
         self.model.eval()
@@ -17,7 +17,7 @@ class SaliencyMask(object):
         for hook in self.hooks:
             hook.remove()
             
-class VanillaGradient(SaliencyMask):
+class VanillaGradient(Core):
     def __init__(self, model):
         super(VanillaGradient, self).__init__(model)
 
