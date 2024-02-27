@@ -33,7 +33,7 @@ class VanillaGradient(Core):
         super(VanillaGradient, self).__init__(model)
 
     # return gradients
-    def get_mask(self, img: torch.Tensor, target_class: torch.Tensor):
+    def get_mask(self, img: torch.Tensor, target_class: torch.Tensor) -> torch.Tensor:
         self.model.eval()
         self.model.zero_grad()
         
@@ -77,6 +77,8 @@ class CAMWrapper(Core):
             def _store_grad(grad):
                 self.gradients[name] = grad.detach()
             def forward_hook(module, input, output):
+                if not hasattr(output, 'requires_grad') or not output.requires_grad:
+                    return
                 output.register_hook(_store_grad)
                 
             return forward_hook
