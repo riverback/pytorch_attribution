@@ -7,7 +7,7 @@ some results of resnet50 from timm, example code at [./gradientss_visualization_
 <img src="./examples/gradients_visualization.png">
 
 ## Class Activation Map (CAM) Visualization
-some results of resnet50 from timm, the target layer is `layer3`, example code at [./gradientss_visualization_examples.py](./gradients_visualization_examples.py)
+resnet50, the target layer is `layer3`, example code at [./cam_visualization_examples.py](./cam_visualization_examples.py)
 
 <img src="./examples/cam_visualization.png">
 
