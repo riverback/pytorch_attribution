@@ -3,5 +3,5 @@ saliency
 pytorch-grad-cam
 test_code.ipynb
 .vscode
-*/__pycache__
+*__pycache__*
 temp

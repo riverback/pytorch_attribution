@@ -8,7 +8,7 @@ import requests
 
 
 from attribution import VanillaGradient, IntegratedGradients, BlurIG, GuidedIG
-from utils import normalize_saliency, visualize_single_saliency
+from attribution.utils import normalize_saliency, visualize_single_saliency
 
 
 if __name__ == '__main__':

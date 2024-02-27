@@ -6,8 +6,8 @@ from timm.data import resolve_model_data_config
 from timm.data.transforms_factory import create_transform
 import requests
 
-from utils import normalize_saliency, visualize_single_saliency
 from attribution import GradCAM, GradCAMPlusPlus, XGradCAM, BagCAM
+from attribution.utils import normalize_saliency, visualize_single_saliency
 
 
 if __name__ == '__main__':
