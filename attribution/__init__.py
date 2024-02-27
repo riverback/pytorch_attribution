@@ -8,3 +8,4 @@ from .grad_cam_plusplus import GradCAMPlusPlus
 from .xgrad_cam import XGradCAM
 from .bag_cam import BagCAM
 from .score_cam import ScoreCAM
+from .layer_cam import LayerCAM

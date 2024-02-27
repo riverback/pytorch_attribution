@@ -6,7 +6,7 @@ from timm.data import resolve_model_data_config
 from timm.data.transforms_factory import create_transform
 import requests
 
-from attribution import GradCAM, GradCAMPlusPlus, XGradCAM, BagCAM
+from attribution import GradCAM, GradCAMPlusPlus, XGradCAM, BagCAM, ScoreCAM, LayerCAM
 from attribution.utils import normalize_saliency, visualize_single_saliency
 
 
@@ -85,10 +85,15 @@ if __name__ == '__main__':
     bag_cam = normalize_saliency(bagcam_net.get_mask(img, target_index, target_layer))
     print('BagCAM:', bag_cam.shape)
     
-    from attribution import ScoreCAM
+    # ScoreCAM
     scorecam = ScoreCAM(model)
     score_cam = normalize_saliency(scorecam.get_mask(img, target_index, target_layer))
     print('ScoreCAM', score_cam.shape)
+    
+    # LayerCAM
+    layercam = LayerCAM(model)
+    layer_cam = normalize_saliency(layercam.get_mask(img, target_index, target_layer))
+    print('LayerCAM', layer_cam.shape)
     
     # Visualize the saliency maps
     plt.figure(figsize=(16, 10))
@@ -111,6 +116,9 @@ if __name__ == '__main__':
     plt.subplot(2,5,6)
     plt.title('ScoreCAM')
     visualize_single_saliency(score_cam[0].unsqueeze(0))
+    plt.subplot(2,5,7)
+    plt.title('LayerCAM')
+    visualize_single_saliency(layer_cam[0].unsqueeze(0))
     plt.tight_layout()
     plt.savefig('examples/cam_visualization.png', bbox_inches='tight', pad_inches=0.5)
     
