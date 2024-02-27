@@ -33,19 +33,19 @@ class ScoreCAM(CAMWrapper):
             
             imgs = img[:, None, :, :] * upsampled[:, :, None, :, :]
         
-        scores = []
-        # targets = [ClassifierOutputTarget(target_index)]
         get_targets = lambda o, target: o[target]
         target_class = target_class.cpu().tolist()
         if not isinstance(target_class, list):
             target_class = [target_class]
-        for i in range(imgs.size(0)):
-            input_img = imgs[i]
-            for batch_i in range(0, input_img.size(0), batch_size):
-                batch = input_img[batch_i: batch_i + batch_size, :]
-                outputs = [get_targets(o, target_class[i]).detach() for o in self.model(batch)]
-                scores.extend(outputs)
+        
+        scores = []
         with torch.no_grad():
+            for i in range(imgs.size(0)):
+                input_img = imgs[i]
+                for batch_i in range(0, input_img.size(0), batch_size):
+                    batch = input_img[batch_i: batch_i + batch_size, :]
+                    outputs = [get_targets(o, target_class[i]).detach() for o in self.model(batch)]
+                    scores.extend(outputs)
             scores = torch.tensor(scores)
             scores = scores.view(feature_maps.shape[0], feature_maps.shape[1])
             weights = F.softmax(scores, dim=-1)
