@@ -94,4 +94,4 @@ if __name__ == '__main__':
     plt.title('Smoothed Guided Integrated Gradients')
     visualize_single_saliency(attribution_smooth_guided_ig)
     plt.tight_layout()
-    plt.savefig('examples/gradients_visualization.png', bbox_inches='tight', pad_inches=1)
+    plt.savefig('examples/gradients_visualization.png', bbox_inches='tight', pad_inches=0.5)

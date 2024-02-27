@@ -1,11 +1,15 @@
-# Explainability Methods for PyTorch Image Models (timm)
-This is an ongoing work to implement various attribution methods for image classification models from [timm](https://github.com/huggingface/pytorch-image-models).
+# Attritbuion Methods for Image Classification Models
+This is an ongoing work to implement various attribution methods for image classification models in PyTorch using a unified framework.
 
 ## Gradients Visualization
-results of resnet50 from timm, example code at [./gradientss_visualization_examples.py](./gradients_visualization_examples.py)
+some results of resnet50 from timm, example code at [./gradientss_visualization_examples.py](./gradients_visualization_examples.py)
 
 <img src="./examples/gradients_visualization.png">
 
+## Class Activation Map (CAM) Visualization
+some results of resnet50 from timm, the target layer is `layer3`, example code at [./gradientss_visualization_examples.py](./gradients_visualization_examples.py)
+
+<img src="./examples/cam_visualization.png">
 
 ## TODO:
 - [x] Unify gradient visualization API
