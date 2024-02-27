@@ -30,10 +30,11 @@ if __name__ == '__main__':
     
     # Predict the image
     img = transform(dog).unsqueeze(0)
+    img = torch.cat([img, img])
     img = img.to(device)
     output = model(img)
-    target_index = torch.argmax(output[0]).cpu()
-    print('Predicted:', IMAGENET_1k_LABELS[target_index.item()])
+    target_index = torch.argmax(output, dim=1).cpu()
+    print('Predicted:', IMAGENET_1k_LABELS[target_index[0].item()])
     
     # Get the target layer
     target_layer_candidates = list()
@@ -67,37 +68,52 @@ if __name__ == '__main__':
     # GradCAM
     gradcam_net = GradCAM(model)
     grad_cam = normalize_saliency(gradcam_net.get_mask(img, target_index, target_layer))
+    print('GradCAM', grad_cam.shape)
     
     # GradCAM++
     gradcam_plus_plus_net = GradCAMPlusPlus(model)
     grad_cam_plus_plus = normalize_saliency(gradcam_plus_plus_net.get_mask(img, target_index, target_layer))
+    print('GradCAM++:', grad_cam_plus_plus.shape)
 
     # XGradCAM
     xgradcam_net = XGradCAM(model)
     xgrad_cam = normalize_saliency(xgradcam_net.get_mask(img, target_index, target_layer))
+    print('XGradCAM:', xgrad_cam.shape)
 
     # BagCAM
     bagcam_net = BagCAM(model)
     bag_cam = normalize_saliency(bagcam_net.get_mask(img, target_index, target_layer))
+    print('BagCAM:', bag_cam.shape)
+    
+    from attribution import ScoreCAM
+    scorecam = ScoreCAM(model)
+    score_cam = normalize_saliency(scorecam.get_mask(img, target_index, target_layer))
+    print('ScoreCAM', score_cam.shape)
     
     # Visualize the saliency maps
-    plt.figure(figsize=(16, 5))
-    plt.subplot(1,5,1)
+    plt.figure(figsize=(16, 10))
+    plt.subplot(2,5,1)
     plt.title('Input')
     plt.axis('off')
     plt.imshow(dog)
-    plt.subplot(1,5,2)
+    plt.subplot(2,5,2)
     plt.title('GradCAM')
-    visualize_single_saliency(grad_cam)
-    plt.subplot(1,5,3)
+    visualize_single_saliency(grad_cam[0].unsqueeze(0))
+    plt.subplot(2,5,3)
     plt.title('GradCAM++')
-    visualize_single_saliency(grad_cam_plus_plus)
-    plt.subplot(1,5,4)
+    visualize_single_saliency(grad_cam_plus_plus[0].unsqueeze(0))
+    plt.subplot(2,5,4)
     plt.title('XGradCAM')
-    visualize_single_saliency(xgrad_cam)
-    plt.subplot(1,5,5)
+    visualize_single_saliency(xgrad_cam[0].unsqueeze(0))
+    plt.subplot(2,5,5)
     plt.title('BagCAM')
-    visualize_single_saliency(bag_cam)
+    visualize_single_saliency(bag_cam[0].unsqueeze(0))
+    plt.subplot(2,5,6)
+    plt.title('ScoreCAM')
+    visualize_single_saliency(score_cam[0].unsqueeze(0))
     plt.tight_layout()
     plt.savefig('examples/cam_visualization.png', bbox_inches='tight', pad_inches=0.5)
+    
+    
+    
     
