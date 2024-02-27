@@ -6,11 +6,15 @@ from timm.data import resolve_model_data_config
 from timm.data.transforms_factory import create_transform
 import requests
 
-from attribution import GradCAM, GradCAMPlusPlus, XGradCAM, BagCAM, ScoreCAM, LayerCAM
+from attribution import GradCAM, GradCAMPlusPlus, XGradCAM, BagCAM, ScoreCAM, LayerCAM, AblationCAM
 from attribution.utils import normalize_saliency, visualize_single_saliency
 
+import os
 
 if __name__ == '__main__':
+    # set CUDA_VISIBLE_DEVICES
+    os.environ['CUDA_VISIBLE_DEVICES'] = '2'
+
     # Load imagenet labels
     IMAGENET_1k_URL = 'https://storage.googleapis.com/bit_models/ilsvrc2012_wordnet_lemmas.txt'
     IMAGENET_1k_LABELS = requests.get(IMAGENET_1k_URL).text.strip().split('\n')
@@ -86,14 +90,19 @@ if __name__ == '__main__':
     print('BagCAM:', bag_cam.shape)
     
     # ScoreCAM
-    scorecam = ScoreCAM(model)
-    score_cam = normalize_saliency(scorecam.get_mask(img, target_index, target_layer))
+    scorecam_net = ScoreCAM(model)
+    score_cam = normalize_saliency(scorecam_net.get_mask(img, target_index, target_layer))
     print('ScoreCAM', score_cam.shape)
     
     # LayerCAM
-    layercam = LayerCAM(model)
-    layer_cam = normalize_saliency(layercam.get_mask(img, target_index, target_layer))
+    layercam_net = LayerCAM(model)
+    layer_cam = normalize_saliency(layercam_net.get_mask(img, target_index, target_layer))
     print('LayerCAM', layer_cam.shape)
+
+    # AblationCAM
+    ablationcam_net = AblationCAM(model)
+    ablation_cam = normalize_saliency(ablationcam_net.get_mask(img, target_index, target_layer))
+    print('AblationCAM', ablation_cam.shape)
     
     # Visualize the saliency maps
     plt.figure(figsize=(16, 10))
@@ -107,6 +116,9 @@ if __name__ == '__main__':
     plt.subplot(2,5,3)
     plt.title('GradCAM++')
     visualize_single_saliency(grad_cam_plus_plus[0].unsqueeze(0))
+    plt.subplot(2,5,4)
+    plt.title('AblationCAM')
+    visualize_single_saliency(ablation_cam[0].unsqueeze(0))
     plt.subplot(2,5,5)
     plt.title('ScoreCAM')
     visualize_single_saliency(score_cam[0].unsqueeze(0))
