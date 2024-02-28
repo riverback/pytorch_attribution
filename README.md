@@ -18,6 +18,13 @@ resnet50, the target layer is `layer3`, example code at [./cam_visualization_exa
 
 <img src="./examples/cam_visualization.png">
 
+## CAM Visualization for ViT and Swin Transformer
+use `attribution.utils.get_reshape_transform` when creating the attribution model, example code at [./cam_visualization_for_transformers_examples.py](./cam_visualization_for_transformers_examples.py). 
+
+<img src="./examples/cam_visualization_for_transformers.png">
+
+Currently, some methods are not supported for transformers, such as Ablation-CAM, and the visualization effect is not as good as CNN models since many methods are designed with the concept of feature maps. We will try to add visualization methods that are designed for transformers in the future.
+
 ## Combine Gradients and CAM Visualization
 similar to Guided Grad-CAM, any method in the gradient visualization can be combined with CAM visualization, example code at [./combine_cam_and_gradients_visualization_examples.py](./combine_cam_and_gradients_visualization_examples.py)
 
@@ -101,12 +108,6 @@ plt.savefig('examples/quick_start.png', bbox_inches='tight', pad_inches=0.5)
 
 <img src="./examples/quick_start.png">
 
-## CAM Visualization for ViT and Swin Transformer
-use `attribution.utils.get_reshape_transform` when creating the attribution model, example code at [./cam_visualization_for_transformers_examples.py](./cam_visualization_for_transformers_examples.py). 
-
-<img src="./examples/cam_visualization_for_transformers.png">
-
-Currently, some methods are not supported for transformers, such as Ablation-CAM, and the visualization effect is not as good as CNN models since many methods are designed with the concept of feature maps. We will try to add visualization methods that are designed for transformers in the future.
 
 ## TODO:
 - [x] Unify gradient visualization API.
