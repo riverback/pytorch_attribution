@@ -9,11 +9,8 @@ import requests
 from attribution import GradCAM, GradCAMPlusPlus, XGradCAM, BagCAM, ScoreCAM, LayerCAM, AblationCAM
 from attribution.utils import normalize_saliency, visualize_single_saliency
 
-import os
 
 if __name__ == '__main__':
-    # set CUDA_VISIBLE_DEVICES
-    os.environ['CUDA_VISIBLE_DEVICES'] = '2'
 
     # Load imagenet labels
     IMAGENET_1k_URL = 'https://storage.googleapis.com/bit_models/ilsvrc2012_wordnet_lemmas.txt'
