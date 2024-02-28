@@ -1,4 +1,4 @@
-from attribution.utils import get_2d_projection
+from .utils import get_2d_projection
 from .base import CAMWrapper
 
 import torch

@@ -2,6 +2,7 @@ from .base import VanillaGradient
 from .ig import IntegratedGradients
 from .blur_ig import BlurIG
 from .guided_ig import GuidedIG
+from .guided_backprop import GuidedBackProp
 
 from .grad_cam import GradCAM
 from .grad_cam_plusplus import GradCAMPlusPlus

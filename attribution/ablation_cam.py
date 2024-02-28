@@ -1,5 +1,5 @@
 from .base import CAMWrapper
-from attribution.utils import replace_layer_recursive, get_2d_projection
+from .utils import replace_layer_recursive, get_2d_projection
 
 import numpy as np
 import torch

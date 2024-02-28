@@ -4,7 +4,7 @@ from torch.nn import functional as F
 from typing import Optional
 
 from .base import CAMWrapper
-from attribution.utils import find_layer_predicate_recursive
+from .utils import find_layer_predicate_recursive
 
 class FullGrad(CAMWrapper):
     def __init__(self, model: torch.nn.Module):

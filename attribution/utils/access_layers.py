@@ -11,6 +11,7 @@ def replace_layer_recursive(model: torch.nn.Module, old_layer: torch.nn.Module, 
 
 
 def replace_all_layer_type_recursive(model: torch.nn.Module, old_layer_type: torch.nn.Module, new_layer: torch.nn.Module):
+    '''new_layer is a instance of the new layer type, not the type itself.'''
     for name, layer in model._modules.items():
         if isinstance(layer, old_layer_type):
             model._modules[name] = new_layer
