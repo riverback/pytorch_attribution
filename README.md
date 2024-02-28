@@ -13,6 +13,11 @@ resnet50, the target layer is `layer3`, example code at [./cam_visualization_exa
 
 <img src="./examples/cam_visualization.png">
 
+## Combine Gradients and CAM Visualization
+similar to Guided Grad-CAM, any method in the gradient visualization can be combined with CAM visualization, example code at [./combine_cam_and_gradients_visualization_examples.py](./combine_cam_and_gradients_visualization_examples.py)
+
+<img src="./examples/combine_cam_and_gradients_visualization.png">
+
 ## TODO:
 - [x] Unify gradient visualization API.
 - [x] Implement CAM visualization for CNN models based on known target_layer names.
