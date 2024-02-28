@@ -7,7 +7,7 @@ from timm.data.transforms_factory import create_transform
 import requests
 
 
-from attribution import VanillaGradient, IntegratedGradients, BlurIG, GuidedIG
+from attribution import VanillaGradient, IntegratedGradients, BlurIG, GuidedIG, GuidedBackProp
 from attribution.utils import normalize_saliency, visualize_single_saliency
 
 
@@ -46,6 +46,11 @@ if __name__ == '__main__':
     gradient_net = VanillaGradient(model)
     attribution_gradients = normalize_saliency(gradient_net.get_mask(img, target_index))
     attribution_smooth_gradients = normalize_saliency(gradient_net.get_smoothed_mask(img, target_index, samples=10, std=0.1))
+    
+    # Guided Backpropagation
+    guided_bp_net = GuidedBackProp(model)
+    attribution_guided_bp = normalize_saliency(guided_bp_net.get_mask(img, target_index))
+    
     # Integrated Gradients
     ig_net = IntegratedGradients(model)
     attribution_ig = normalize_saliency(ig_net.get_mask(img, target_index, steps=100))
@@ -66,9 +71,8 @@ if __name__ == '__main__':
     plt.axis('off')
     plt.imshow(dog)
     plt.subplot(2, 5, 6)
-    plt.title('Normalized Input')
-    plt.axis('off')
-    plt.imshow(img[0].permute(1, 2, 0).cpu().numpy())
+    plt.title('Guided Backprop')
+    visualize_single_saliency(attribution_guided_bp)
     plt.subplot(2, 5, 2)
     plt.title('Vanilla Gradient')
     visualize_single_saliency(attribution_gradients)
