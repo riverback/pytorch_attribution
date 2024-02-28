@@ -6,7 +6,7 @@ from timm.data import resolve_model_data_config
 from timm.data.transforms_factory import create_transform
 import requests
 
-from attribution import GradCAM, GradCAMPlusPlus, XGradCAM, BagCAM, ScoreCAM, LayerCAM, AblationCAM, FullGrad, EigenCAM
+from attribution import GradCAM, GradCAMPlusPlus, XGradCAM, BagCAM, ScoreCAM, LayerCAM, AblationCAM, FullGrad, EigenCAM, EigenGradCAM
 from attribution.utils import normalize_saliency, visualize_single_saliency
 
 
@@ -96,6 +96,11 @@ if __name__ == '__main__':
     eigen_cam = normalize_saliency(eigencam_net.get_mask(img, target_index, target_layer))
     print('EigenCAM', eigen_cam.shape)
     
+    # EigenGradCAM
+    eigengradcam_net = EigenGradCAM(model)
+    eigen_grad_cam = normalize_saliency(eigengradcam_net.get_mask(img, target_index, target_layer))
+    print('EigenGradCAM', eigen_grad_cam.shape)
+    
     # LayerCAM
     layercam_net = LayerCAM(model)
     layer_cam = normalize_saliency(layercam_net.get_mask(img, target_index, target_layer))
@@ -112,36 +117,39 @@ if __name__ == '__main__':
     print('FullGrad', full_grad.shape)
     
     # Visualize the saliency maps
-    plt.figure(figsize=(16, 10))
-    plt.subplot(2,5,1)
+    plt.figure(figsize=(16, 15))
+    plt.subplot(3,5,1)
     plt.title('Input')
     plt.axis('off')
     plt.imshow(dog)
-    plt.subplot(2,5,2)
+    plt.subplot(3,5,2)
     plt.title('GradCAM')
     visualize_single_saliency(grad_cam[0].unsqueeze(0))
-    plt.subplot(2,5,3)
+    plt.subplot(3,5,3)
     plt.title('GradCAM++')
     visualize_single_saliency(grad_cam_plus_plus[0].unsqueeze(0))
-    plt.subplot(2,5,4)
+    plt.subplot(3,5,4)
     plt.title('FullGrad')
     visualize_single_saliency(full_grad[0].unsqueeze(0))
-    plt.subplot(2,5,5)
+    plt.subplot(3,5,5)
     plt.title('AblationCAM')
     visualize_single_saliency(ablation_cam[0].unsqueeze(0))
-    plt.subplot(2,5,6)
+    plt.subplot(3,5,6)
     plt.title('ScoreCAM')
     visualize_single_saliency(score_cam[0].unsqueeze(0))
-    plt.subplot(2,5,7)
+    plt.subplot(3,5,7)
     plt.title('EigenCAM')
     visualize_single_saliency(eigen_cam[0].unsqueeze(0))
-    plt.subplot(2,5,8)
+    plt.subplot(3,5,8)
+    plt.title('EigenGradCAM')
+    visualize_single_saliency(eigen_grad_cam[0].unsqueeze(0))
+    plt.subplot(3,5,9)
     plt.title('XGradCAM')
     visualize_single_saliency(xgrad_cam[0].unsqueeze(0))
-    plt.subplot(2,5,9)
+    plt.subplot(3,5,10)
     plt.title('LayerCAM')
     visualize_single_saliency(layer_cam[0].unsqueeze(0))
-    plt.subplot(2,5,10)
+    plt.subplot(3,5,11)
     plt.title('BagCAM')
     visualize_single_saliency(bag_cam[0].unsqueeze(0))
     
