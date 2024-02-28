@@ -1,5 +1,6 @@
 import torch
 from typing import Optional, List, Union
+from .utils import normalize_saliency
 
 class Core(torch.nn.Module):
     def __init__(self, model: torch.nn.Module):
@@ -106,3 +107,25 @@ class CAMWrapper(Core):
         cam -= cam.min(dim=1, keepdim=True)[0]
         cam /= cam.max(dim=1, keepdim=True)[0]
         return cam.view(B, C, H, W)
+    
+    
+class CombinedWrapper(Core):
+    def __init__(self, model: torch.nn.Module, gradient_net: Core, cam_net: CAMWrapper):
+        super(CombinedWrapper, self).__init__(model)
+        self.gradient_net = gradient_net(model)
+        self.cam_net = cam_net(model)
+        
+    def get_mask(self, img: torch.Tensor, target_class: torch.Tensor, target_layer: str, *args_for_gradient_net):
+        B, C, H, W = img.size()
+        self.model.eval()
+        self.model.zero_grad()
+        cam = self.cam_net.get_mask(img, target_class, target_layer)
+        gradients = self.gradient_net.get_mask(img, target_class, *args_for_gradient_net)
+        gradients = normalize_saliency(gradients, return_device=self.device)
+        
+        with torch.no_grad():
+            attribution = gradients * cam
+            attribution = torch.nn.functional.relu(attribution)
+            attribution = self.cam_net.normalize_cam(attribution)
+            
+        return attribution

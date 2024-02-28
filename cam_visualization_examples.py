@@ -6,7 +6,7 @@ from timm.data import resolve_model_data_config
 from timm.data.transforms_factory import create_transform
 import requests
 
-from attribution import GradCAM, GradCAMPlusPlus, XGradCAM, BagCAM, ScoreCAM, LayerCAM, AblationCAM, FullGrad, EigenCAM, EigenGradCAM
+from attribution import GradCAM, GradCAMPlusPlus, XGradCAM, BagCAM, ScoreCAM, LayerCAM, AblationCAM, FullGrad, EigenCAM, EigenGradCAM, HiResCAM
 from attribution.utils import normalize_saliency, visualize_single_saliency
 
 
@@ -75,6 +75,11 @@ if __name__ == '__main__':
     gradcam_plus_plus_net = GradCAMPlusPlus(model)
     grad_cam_plus_plus = normalize_saliency(gradcam_plus_plus_net.get_mask(img, target_index, target_layer))
     print('GradCAM++:', grad_cam_plus_plus.shape)
+    
+    # HiResCAM
+    hirescam_net = HiResCAM(model)
+    hires_cam = normalize_saliency(hirescam_net.get_mask(img, target_index, target_layer))
+    print('HiResCAM:', hires_cam.shape)
 
     # XGradCAM
     xgradcam_net = XGradCAM(model)
@@ -129,27 +134,30 @@ if __name__ == '__main__':
     plt.title('GradCAM++')
     visualize_single_saliency(grad_cam_plus_plus[0].unsqueeze(0))
     plt.subplot(3,5,4)
+    plt.title('HiResCAM')
+    visualize_single_saliency(hires_cam[0].unsqueeze(0))
+    plt.subplot(3,5,5)
     plt.title('FullGrad')
     visualize_single_saliency(full_grad[0].unsqueeze(0))
-    plt.subplot(3,5,5)
+    plt.subplot(3,5,6)
     plt.title('AblationCAM')
     visualize_single_saliency(ablation_cam[0].unsqueeze(0))
-    plt.subplot(3,5,6)
+    plt.subplot(3,5,7)
     plt.title('ScoreCAM')
     visualize_single_saliency(score_cam[0].unsqueeze(0))
-    plt.subplot(3,5,7)
+    plt.subplot(3,5,8)
     plt.title('EigenCAM')
     visualize_single_saliency(eigen_cam[0].unsqueeze(0))
-    plt.subplot(3,5,8)
+    plt.subplot(3,5,9)
     plt.title('EigenGradCAM')
     visualize_single_saliency(eigen_grad_cam[0].unsqueeze(0))
-    plt.subplot(3,5,9)
+    plt.subplot(3,5,10)
     plt.title('XGradCAM')
     visualize_single_saliency(xgrad_cam[0].unsqueeze(0))
-    plt.subplot(3,5,10)
+    plt.subplot(3,5,11)
     plt.title('LayerCAM')
     visualize_single_saliency(layer_cam[0].unsqueeze(0))
-    plt.subplot(3,5,11)
+    plt.subplot(3,5,12)
     plt.title('BagCAM')
     visualize_single_saliency(bag_cam[0].unsqueeze(0))
     

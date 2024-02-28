@@ -5,6 +5,8 @@ from .guided_ig import GuidedIG
 from .guided_backprop import GuidedBackProp
 
 from .grad_cam import GradCAM
+from .guided_gradcam import GuidedGradCAM
+from .hires_cam import HiResCAM
 from .grad_cam_plusplus import GradCAMPlusPlus
 from .xgrad_cam import XGradCAM
 from .bag_cam import BagCAM
