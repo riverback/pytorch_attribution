@@ -7,7 +7,7 @@ from typing import List
 class HiResCAM(CAMWrapper):
     def get_mask(self, img: torch.Tensor, 
                  target_class: torch.Tensor, 
-                 target_layer: str | List[str]):
+                 target_layer: str):
         B, C, H, W = img.size()
         self.model.eval()
         self.model.zero_grad()

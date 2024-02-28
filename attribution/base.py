@@ -113,10 +113,10 @@ class CAMWrapper(Core):
     
     
 class CombinedWrapper(Core):
-    def __init__(self, model: torch.nn.Module, gradient_net: Core, cam_net: CAMWrapper):
+    def __init__(self, model: torch.nn.Module, gradient_net: Core, cam_net: CAMWrapper, reshape_transform=None):
         super(CombinedWrapper, self).__init__(model)
         self.gradient_net = gradient_net(model)
-        self.cam_net = cam_net(model)
+        self.cam_net = cam_net(model, reshape_transform)
         
     def get_mask(self, img: torch.Tensor, target_class: torch.Tensor, target_layer: str, **kwargs_for_gradient_net):
         B, C, H, W = img.size()
