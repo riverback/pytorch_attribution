@@ -6,7 +6,7 @@ from timm.data import resolve_model_data_config
 from timm.data.transforms_factory import create_transform
 import requests
 
-from attribution import GradCAM, GradCAMPlusPlus, XGradCAM, BagCAM, ScoreCAM, LayerCAM, AblationCAM
+from attribution import GradCAM, GradCAMPlusPlus, XGradCAM, BagCAM, ScoreCAM, LayerCAM, AblationCAM, FullGrad
 from attribution.utils import normalize_saliency, visualize_single_saliency
 
 
@@ -100,6 +100,11 @@ if __name__ == '__main__':
     ablationcam_net = AblationCAM(model)
     ablation_cam = normalize_saliency(ablationcam_net.get_mask(img, target_index, target_layer))
     print('AblationCAM', ablation_cam.shape)
+
+    # FullGrad
+    fullgrad_net = FullGrad(model)
+    full_grad = normalize_saliency(fullgrad_net.get_mask(img, target_index, target_layer=None))
+    print('FullGrad', full_grad.shape)
     
     # Visualize the saliency maps
     plt.figure(figsize=(16, 10))
@@ -114,15 +119,18 @@ if __name__ == '__main__':
     plt.title('GradCAM++')
     visualize_single_saliency(grad_cam_plus_plus[0].unsqueeze(0))
     plt.subplot(2,5,4)
+    plt.title('FullGrad')
+    visualize_single_saliency(full_grad[0].unsqueeze(0))
+    plt.subplot(2,5,5)
     plt.title('AblationCAM')
     visualize_single_saliency(ablation_cam[0].unsqueeze(0))
-    plt.subplot(2,5,5)
+    plt.subplot(2,5,6)
     plt.title('ScoreCAM')
     visualize_single_saliency(score_cam[0].unsqueeze(0))
-    plt.subplot(2,5,6)
+    plt.subplot(2,5,7)
     plt.title('XGradCAM')
     visualize_single_saliency(xgrad_cam[0].unsqueeze(0))
-    plt.subplot(2,5,7)
+    plt.subplot(2,5,8)
     plt.title('LayerCAM')
     visualize_single_saliency(layer_cam[0].unsqueeze(0))
     plt.subplot(2,5,10)

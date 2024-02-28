@@ -1,4 +1,5 @@
 import torch
+from typing import Optional, List, Union
 
 class Core(torch.nn.Module):
     def __init__(self, model: torch.nn.Module):
@@ -92,6 +93,11 @@ class CAMWrapper(Core):
             return saved_dict[name]
         
         raise ValueError('Invalid layer name')
+    
+    def get_mask(self, img: torch.Tensor,
+                 target_class: torch.Tensor,
+                 target_layer: Union[str, List[str]]):
+        raise NotImplementedError('A derived class should implemented this method')
     
     @torch.no_grad()
     def normalize_cam(self, cam: torch.Tensor):

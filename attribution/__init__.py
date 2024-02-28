@@ -10,3 +10,4 @@ from .bag_cam import BagCAM
 from .score_cam import ScoreCAM
 from .layer_cam import LayerCAM
 from .ablation_cam import AblationCAM
+from .fullgrad_cam import FullGrad
