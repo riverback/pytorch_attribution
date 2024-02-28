@@ -63,11 +63,12 @@ class VanillaGradient(Core):
 
 
 class CAMWrapper(Core):
-    def __init__(self, model: torch.nn.Module):
+    def __init__(self, model: torch.nn.Module, reshape_transform=None):
         super(CAMWrapper, self).__init__(model)
     
         self.feature_maps = dict()
         self.gradients = dict()
+        self.reshape_transform = reshape_transform
         
         def save_feature_maps(name):
             def forward_hook(module, input, output):
@@ -91,6 +92,8 @@ class CAMWrapper(Core):
                 
     def _find(self, saved_dict, name: str):
         if name in saved_dict.keys():
+            if self.reshape_transform is not None:
+                return self.reshape_transform(saved_dict[name])
             return saved_dict[name]
         
         raise ValueError('Invalid layer name')
@@ -105,7 +108,7 @@ class CAMWrapper(Core):
         B, C, H, W = cam.size()
         cam = cam.view(cam.size(0), -1)
         cam -= cam.min(dim=1, keepdim=True)[0]
-        cam /= cam.max(dim=1, keepdim=True)[0]
+        cam = cam / (cam.max(dim=1, keepdim=True)[0]+1e-5)
         return cam.view(B, C, H, W)
     
     

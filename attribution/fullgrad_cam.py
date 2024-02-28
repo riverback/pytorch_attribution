@@ -7,8 +7,10 @@ from .base import CAMWrapper
 from .utils import find_layer_predicate_recursive
 
 class FullGrad(CAMWrapper):
-    def __init__(self, model: torch.nn.Module):
-        super().__init__(model)
+    def __init__(self, model: torch.nn.Module, reshape_transform=None):
+        if reshape_transform is not None:
+            print('Warning: FullGrad may not work properly with ViT and Swin Transformer models.')
+        super().__init__(model, reshape_transform)
 
         self.target_layers = find_layer_predicate_recursive(self.model, self.layer_with_2D_bias)
         self.bias_data = [self.get_bias_data(layer) for layer in self.target_layers]
