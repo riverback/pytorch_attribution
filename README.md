@@ -4,9 +4,14 @@ This is an ongoing work to implement various attribution methods for image class
 We only consider plug-and-play methods that **do not have special requirements on the model architecture and do not need to add modules with learnable parameters or additional training**. At the same time, we hope to facilitate weakly-supervised localization and segmentation using attribution results, as well as incorporating them as part of model training (e.g., use the attribution results as additional supervision information). Therefore, all methods use PyTorch tensors for calculations as much as possible, support batch input, and GPU usage.
 
 ## Gradients Visualization
-some results of resnet50 from timm, example code at [./gradientss_visualization_examples.py](./gradients_visualization_examples.py)
+**CNN models**: some results of resnet50 from timm, example code at [./gradientss_visualization_examples.py](./gradients_visualization_examples.py).
 
 <img src="./examples/gradients_visualization.png">
+
+
+**Vision/Swin Transformers**: gradients visualization methods can be directly used for transformers, example code at [./gradients_visualization_for_transformers_examples.py](./gradients_visualization_for_transformers_examples.py).
+
+<img src="./examples/gradients_visualization_for_transformers.png">
 
 ## Class Activation Map (CAM) Visualization
 resnet50, the target layer is `layer3`, example code at [./cam_visualization_examples.py](./cam_visualization_examples.py)
@@ -96,15 +101,22 @@ plt.savefig('examples/quick_start.png', bbox_inches='tight', pad_inches=0.5)
 
 <img src="./examples/quick_start.png">
 
+## CAM Visualization for ViT and Swin Transformer
+use `attribution.utils.get_reshape_transform` when creating the attribution model, example code at [./cam_visualization_for_transformers_examples.py](./cam_visualization_for_transformers_examples.py). 
+
+<img src="./examples/cam_visualization_for_transformers.png">
+
+Currently, some methods are not supported for transformers, such as Ablation-CAM, and the visualization effect is not as good as CNN models since many methods are designed with the concept of feature maps. We will try to add visualization methods that are designed for transformers in the future.
+
 ## TODO:
 - [x] Unify gradient visualization API.
 - [x] Implement CAM visualization for CNN models based on known target_layer names.
-- [ ] Implement CAM for ViT ,Swin Transformer and etc.
+- [x] Implement CAM for ViT ,Swin Transformer and etc.
 - [ ] Implement some new methods (after 2023) and some methods without official implementation.
-- [ ] Documentation for gradient visualization.
-- [ ] Documentation for CAM visualization.
 - [ ] Unify all APIs.
+- [ ] Documentation.
+
 
 ## Acknowledgements
-This project is inspired by [timm](https://github.com/huggingface/pytorch-image-models), [jacobgil/pytorch-grad-cam](https://github.com/jacobgil/pytorch-grad-cam), [PAIR-code/saliency](https://github.com/PAIR-code/saliency) and [hummat/saliency](https://github.com/hummat/saliency). Thanks for their wonderful work.
+This project is inspired by [jacobgil/pytorch-grad-cam](https://github.com/jacobgil/pytorch-grad-cam), [PAIR-code/saliency](https://github.com/PAIR-code/saliency) and [hummat/saliency](https://github.com/hummat/saliency). Thanks for their wonderful work.
 

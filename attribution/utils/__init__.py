@@ -1,3 +1,4 @@
 from .visualization_maps import normalize_saliency, visualize_single_saliency
 from .access_layers import find_layer_predicate_recursive, find_layer_types_recursive, replace_all_layer_type_recursive, replace_layer_recursive
 from .svd_on_feature_maps import get_2d_projection
+from .reshape_for_transformer import get_reshape_transform
