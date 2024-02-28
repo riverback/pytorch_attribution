@@ -1,5 +1,7 @@
 # Attritbuion Methods for Image Classification Models
-This is an ongoing work to implement various attribution methods for image classification models in PyTorch using a unified framework.
+This is an ongoing work to implement various attribution methods for image classification models in PyTorch using a unified framework. 
+
+We only consider plug-and-play methods that do not have special requirements on the model architecture and do not need to add modules with learnable parameters. At the same time, we hope to facilitate weakly-supervised localization and segmentation using attribution results, as well as incorporating them as part of model training (e.g., use the attribution results as additional supervision information). Therefore, all methods use PyTorch tensors for calculations as much as possible, support batch input, and GPU usage.
 
 ## Gradients Visualization
 some results of resnet50 from timm, example code at [./gradientss_visualization_examples.py](./gradients_visualization_examples.py)
