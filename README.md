@@ -57,17 +57,23 @@ target_index = torch.argmax(output, dim=1).cpu()
 print('Predicted:', IMAGENET_1k_LABELS[target_index[0].item()])
 
 # Gradients visualization
-blur_ig_kwargs = {'steps': 100, 'batch_size': 4, 'max_sigma': 50, 'grad_step': 0.01, 'sqrt': False}
+blur_ig_kwargs = {'steps': 100, 
+                  'batch_size': 4, 
+                  'max_sigma': 50, 
+                  'grad_step': 0.01, 
+                  'sqrt': False}
 blur_ig_net = BlurIG(model)
 blur_ig = normalize_saliency(blur_ig_net.get_mask(img, target_index, **blur_ig_kwargs))
 
 # CAM visualization
 gradcam_net = GradCAM(model)
-gradcam = normalize_saliency(gradcam_net.get_mask(img, target_index, target_layer='layer3'))
+gradcam = normalize_saliency(
+    gradcam_net.get_mask(img, target_index, target_layer='layer3'))
 
 # Combine Gradients and CAM visualization
 combined = CombinedWrapper(model, BlurIG, GradCAM)
-combined_saliency = normalize_saliency(combined.get_mask(img, target_index, target_layer='layer3', **blur_ig_kwargs))
+combined_saliency = normalize_saliency(
+    combined.get_mask(img, target_index, target_layer='layer3', **blur_ig_kwargs))
 
 # Visualize
 plt.figure(figsize=(16, 5))
@@ -83,6 +89,7 @@ visualize_single_saliency(gradcam[0].unsqueeze(0))
 plt.title('GradCAM')
 plt.subplot(1, 4, 4)
 visualize_single_saliency(combined_saliency[0].unsqueeze(0))
+plt.title('Combined')
 plt.tight_layout()
 plt.savefig('examples/quick_start.png', bbox_inches='tight', pad_inches=0.5)
 ```
