@@ -115,12 +115,12 @@ class CombinedWrapper(Core):
         self.gradient_net = gradient_net(model)
         self.cam_net = cam_net(model)
         
-    def get_mask(self, img: torch.Tensor, target_class: torch.Tensor, target_layer: str, *args_for_gradient_net):
+    def get_mask(self, img: torch.Tensor, target_class: torch.Tensor, target_layer: str, **kwargs_for_gradient_net):
         B, C, H, W = img.size()
         self.model.eval()
         self.model.zero_grad()
         cam = self.cam_net.get_mask(img, target_class, target_layer)
-        gradients = self.gradient_net.get_mask(img, target_class, *args_for_gradient_net)
+        gradients = self.gradient_net.get_mask(img, target_class, **kwargs_for_gradient_net)
         gradients = normalize_saliency(gradients, return_device=self.device)
         
         with torch.no_grad():

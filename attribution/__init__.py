@@ -16,3 +16,5 @@ from .ablation_cam import AblationCAM
 from .fullgrad_cam import FullGrad
 from .eigen_cam import EigenCAM
 from .eigen_gradcam import EigenGradCAM
+
+from .base import CombinedWrapper
