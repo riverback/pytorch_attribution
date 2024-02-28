@@ -6,7 +6,7 @@ from timm.data import resolve_model_data_config
 from timm.data.transforms_factory import create_transform
 import requests
 
-from attribution import GradCAM, GradCAMPlusPlus, XGradCAM, BagCAM, ScoreCAM, LayerCAM, AblationCAM, FullGrad
+from attribution import GradCAM, GradCAMPlusPlus, XGradCAM, BagCAM, ScoreCAM, LayerCAM, AblationCAM, FullGrad, EigenCAM
 from attribution.utils import normalize_saliency, visualize_single_saliency
 
 
@@ -91,6 +91,11 @@ if __name__ == '__main__':
     score_cam = normalize_saliency(scorecam_net.get_mask(img, target_index, target_layer))
     print('ScoreCAM', score_cam.shape)
     
+    # EigenCAM
+    eigencam_net = EigenCAM(model)
+    eigen_cam = normalize_saliency(eigencam_net.get_mask(img, target_index, target_layer))
+    print('EigenCAM', eigen_cam.shape)
+    
     # LayerCAM
     layercam_net = LayerCAM(model)
     layer_cam = normalize_saliency(layercam_net.get_mask(img, target_index, target_layer))
@@ -128,9 +133,12 @@ if __name__ == '__main__':
     plt.title('ScoreCAM')
     visualize_single_saliency(score_cam[0].unsqueeze(0))
     plt.subplot(2,5,7)
+    plt.title('EigenCAM')
+    visualize_single_saliency(eigen_cam[0].unsqueeze(0))
+    plt.subplot(2,5,8)
     plt.title('XGradCAM')
     visualize_single_saliency(xgrad_cam[0].unsqueeze(0))
-    plt.subplot(2,5,8)
+    plt.subplot(2,5,9)
     plt.title('LayerCAM')
     visualize_single_saliency(layer_cam[0].unsqueeze(0))
     plt.subplot(2,5,10)
