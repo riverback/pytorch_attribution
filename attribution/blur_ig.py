@@ -40,7 +40,11 @@ class BlurIG(VanillaGradient):
             gaussian_gradient_batched.append(gaussian_gradients)
             if len(x_step_batched) == batch_size or i == steps - 1:
                 x_step_batched = torch.cat(x_step_batched, dim=0)
-                gradients = super(BlurIG, self).get_mask(x_step_batched, torch.stack([target_class] * x_step_batched.size(0), dim=0))
+                x_step_batched.requires_grad = True
+                outputs = torch.softmax(self.model(x_step_batched), dim=1)[:, target_class]
+                gradients = torch.autograd.grad(outputs, x_step_batched, torch.ones_like(outputs), create_graph=True)[0]
+                gradients = gradients.detach()
+                # gradients = super(BlurIG, self).get_mask(x_step_batched, torch.stack([target_class] * x_step_batched.size(0), dim=0))
 
                 with torch.no_grad():
                     total_gradients += (step_vector_diff[i] * 
