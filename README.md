@@ -9,7 +9,7 @@ We only consider plug-and-play methods that **do not have special requirements o
 <img src="./examples/gradients_visualization.png">
 
 
-**Vision/Swin Transformers**: gradients visualization methods can be directly used for transformers, example code at [./gradients_visualization_for_transformers_examples.py](./gradients_visualization_for_transformers_examples.py).
+**Vision/Swin Transformers**: gradients visualization methods can be directly used for transformers, the model used here is `vit_tiny_patch16_224.augreg_in21k_ft_in1k` from timm, example code at [./gradients_visualization_for_transformers_examples.py](./gradients_visualization_for_transformers_examples.py).
 
 <img src="./examples/gradients_visualization_for_transformers.png">
 
@@ -19,7 +19,7 @@ resnet50, the target layer is `layer3`, example code at [./cam_visualization_exa
 <img src="./examples/cam_visualization.png">
 
 ## CAM Visualization for ViT and Swin Transformer
-use `attribution.utils.get_reshape_transform` when creating the attribution model, example code at [./cam_visualization_for_transformers_examples.py](./cam_visualization_for_transformers_examples.py). 
+use `attribution.utils.get_reshape_transform` when creating the attribution model, example code at [./cam_visualization_for_transformers_examples.py](./cam_visualization_for_transformers_examples.py). The target layer used for ViT here is `blocks.11.norm1` and that for Swin Transformer is `norm`.
 
 <img src="./examples/cam_visualization_for_transformers.png">
 
