@@ -1,6 +1,8 @@
 # Attritbuion Methods for Image Classification Models
 We only consider plug-and-play methods that **do not have special requirements on the model architecture and do not need to add modules with learnable parameters or additional training**. At the same time, we hope to facilitate weakly-supervised localization and segmentation using attribution results, as well as incorporating them as part of model training (e.g., use the attribution results as additional supervision information). Therefore, all methods use PyTorch tensors for calculations as much as possible, support batch input, and GPU usage.
 
+Since we mainly aim to use attribution results to assist weakly supervised training, localization, segmentation, model distillation and etc., we did not include explainability methods for black-box models like RISE and HISC here.
+
 ## Gradients Visualization
 **CNN models**: some results of resnet50 from timm, example code at [./gradientss_visualization_examples.py](./gradients_visualization_examples.py).
 
@@ -77,8 +79,7 @@ blur_ig = normalize_saliency(blur_ig_net.get_mask(img, target_index, **blur_ig_k
 
 # CAM visualization
 gradcam_net = GradCAM(model)
-gradcam = normalize_saliency(
-    gradcam_net.get_mask(img, target_index, target_layer='layer3'))
+gradcam = normalize_saliency(gradcam_net.get_mask(img, target_index, target_layer='layer3'))
 
 # Combine Gradients and CAM visualization
 combined = CombinedWrapper(model, BlurIG, GradCAM)
@@ -112,7 +113,7 @@ This is still an ongoing work to implement various attribution methods for image
 - [x] Unify gradient visualization API.
 - [x] Implement CAM visualization for CNN models based on known target_layer names.
 - [x] Implement CAM for ViT ,Swin Transformer and etc.
-- [ ] Implement some new methods (after 2023) and some methods without official implementation.
+- [ ] Add LIFT-CAM (ICCV2021), IIA (ICCV2023), Dix (CIKM) and Six (ICDM).
 - [ ] Unify all APIs.
 - [ ] Documentation.
 
