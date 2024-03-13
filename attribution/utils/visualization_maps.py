@@ -32,3 +32,4 @@ def visualize_single_saliency(saliency_map, img_size=None):
     saliency_map = cv2.cvtColor(saliency_map, cv2.COLOR_BGR2RGB)
     plt.axis('off')
     plt.imshow(saliency_map)
+    return saliency_map
