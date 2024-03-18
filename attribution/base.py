@@ -13,9 +13,7 @@ class Core(torch.nn.Module):
         if not isinstance(targets, torch.Tensor):
             targets = torch.tensor([targets], device=self.device)
         targets = targets.view(logits.size(0))
-        one_hot = torch.zeros_like(logits)
-        for i in range(0, one_hot.shape[0]):
-            one_hot[i, targets[i]] = 1.0
+        one_hot = torch.nn.functional.one_hot(targets, num_classes=logits.size(-1)).to(self.device)
         return one_hot
 
     def get_mask(self, img, target_class=None):
