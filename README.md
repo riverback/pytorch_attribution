@@ -30,6 +30,11 @@ similar to Guided Grad-CAM, any method in the gradient visualization can be comb
 
 <img src="./examples/combine_cam_and_gradients_visualization.png">
 
+## Block-Box Perturbation-based Attribution Visualization
+example code at [./perturbation_based_attribution_visualization_examples.py](./perturbation_based_attribution_visualization_examples.py)
+
+<img src="./examples/perturbation_based_visualization.png">
+
 ## Quick Start
 ```python
 from matplotlib import pyplot as plt
