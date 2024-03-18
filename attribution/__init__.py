@@ -4,6 +4,8 @@ from .blur_ig import BlurIG
 from .guided_ig import GuidedIG
 from .guided_backprop import GuidedBackProp
 
+from .occlusion import Occlusion
+
 from .grad_cam import GradCAM
 from .guided_gradcam import GuidedGradCAM
 from .hires_cam import HiResCAM
