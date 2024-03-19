@@ -3,6 +3,8 @@ We only consider plug-and-play methods that **do not have special requirements o
 
 Since we mainly aim to use attribution results to assist weakly supervised training, localization, segmentation, model distillation and etc., we did not include explainability methods for black-box models like RISE and HISC here.
 
+<img src="./examples/attribution_methods.png">
+
 ## Gradients Visualization
 **CNN models**: some results of resnet50 from timm, example code at [./gradientss_visualization_examples.py](./gradients_visualization_examples.py).
 
