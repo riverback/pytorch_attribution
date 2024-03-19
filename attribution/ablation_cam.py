@@ -88,7 +88,8 @@ class AblationCAM(CAMWrapper):
         logits.backward(gradient=target, retain_graph=True)
 
         get_targets = lambda o, target: o[target]
-        target_class = target_class.cpu().tolist()
+        if isinstance(target_class, torch.Tensor):
+            target_class = target_class.cpu().tolist()
         if not isinstance(target_class, list):
             target_class = [target_class]
 

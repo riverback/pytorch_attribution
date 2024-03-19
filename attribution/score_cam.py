@@ -34,7 +34,8 @@ class ScoreCAM(CAMWrapper):
             imgs = img[:, None, :, :] * upsampled[:, :, None, :, :]
         
         get_targets = lambda o, target: o[target]
-        target_class = target_class.cpu().tolist()
+        if isinstance(target_class, torch.Tensor):
+            target_class = target_class.cpu().tolist()
         if not isinstance(target_class, list):
             target_class = [target_class]
         
