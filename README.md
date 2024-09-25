@@ -120,6 +120,7 @@ This is still an ongoing work to implement various attribution methods for image
 - [x] Unify gradient visualization API.
 - [x] Implement CAM visualization for CNN models based on known target_layer names.
 - [x] Implement CAM for ViT ,Swin Transformer and etc.
+- [x] Implement keep positive/negative mask, keep/remove absolute mask metrics. For details, please refer to [Fast Axiomatic Attribution for Neural Networks](https://proceedings.neurips.cc/paper/2021/hash/a284df1155ec3e67286080500df36a9a-Abstract.html).
 - [ ] Add LIFT-CAM (ICCV2021), IIA (ICCV2023), Dix (CIKM) and Six (ICDM).
 - [ ] Unify all APIs.
 - [ ] Documentation.
