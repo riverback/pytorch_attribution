@@ -109,7 +109,7 @@ class GuidedIG(VanillaGradient):
 
                 gradients[x == x_max] = torch.tensor(np.inf)
                 
-                threshold = torch.quantile(torch.abs(gradients), fraction, interpolation='lower')
+                threshold = torch.quantile(torch.abs(gradients), fraction, dim=None, keepdim=False, interpolation='lower')
                 s = torch.logical_and(torch.abs(gradients) <= threshold, gradients != torch.tensor(np.inf))
 
                 with torch.no_grad():
